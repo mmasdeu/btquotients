@@ -1055,7 +1055,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
         self._Mat_44=MatrixSpace(ZZ,4,4)
         self._Mat_22=MatrixSpace(ZZ,2,2)
         self._Mat_41=MatrixSpace(ZZ,4,1)
-        self._extra_level = [ff[0] for ff in extra_level.factor()]
+        self._extra_level = [ff[0] for ff in ZZ(extra_level).factor()]
         self._character = character
         self._Xv=[self._Mat_22([1,0,0,0]),self._Mat_22([0,1,0,0]),self._Mat_22([0,0,1,0]),self._Mat_22([0,0,0,1])]
         self._Xe=[self._Mat_22([1,0,0,0]),self._Mat_22([0,1,0,0]),self._Mat_22([0,0,self._p,0]),self._Mat_22([0,0,0,1])]

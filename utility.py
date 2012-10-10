@@ -147,7 +147,8 @@ def my_algdep(z,n,prec = None):
 
     argmax = None
     vmax = -1
-    Rx.<x> = PolynomialRing(QQ)
+    Rx = PolynomialRing(QQ,names = 'x')
+    x = Rx.gens()[0]
     for ii in range(field_deg):
         lincomb = gp.lindep(M.row(ii).list())
         lincomb = Rx([lincomb[ii+1].sage() for ii in range(n+1)])
@@ -372,7 +373,8 @@ def find_divisor(F,x):
     gens=R.gens()
     y=gens[(gens.index(x)+1)%len(gens)]
     F1=[f.subs(dict([(x,0),(y,1)])) for f in F]
-    S.<y>=PolynomialRing(RationalField())
+    S = PolynomialRing(RationalField(),names = 'y')
+    y = S.gen(0)
     others=[]
     for f in F1:
         if list(f.degrees()).count(0)==len(gens)-1:

@@ -1,5 +1,5 @@
-from sage.modular.btquotients.btquotient import *
-from sage.modular.btquotients.ocmodule import *
+# from sage.modular.btquotients.btquotient import *
+# from sage.modular.btquotients.ocmodule import *
 #########################################################################
 #       Copyright (C) 2011 Cameron Franc and Marc Masdeu
 #
