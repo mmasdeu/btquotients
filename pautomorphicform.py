@@ -25,7 +25,8 @@ import sage.rings.arith as arith
 import sage.modular.hecke.hecke_operator
 from btquotient import *
 from ocmodule import *
-
+import sys
+from sage.rings.infinity import Infinity
 
 class HarmonicCocycleElement(HeckeModuleElement):
     r"""
@@ -160,7 +161,7 @@ class HarmonicCocycleElement(HeckeModuleElement):
         EXAMPLES::
         """
         if not self.__nonzero__():
-            return oo
+            return Infinity
         else:
             return min([self._F[e].valuation() for e in range(self._nE)])
 
@@ -969,7 +970,7 @@ class pAutomorphicFormElement(ModuleElement):
 
         """
         if not self.__nonzero__():
-            return oo
+            return Infinity
         else:
             return(min([self._value[e].valuation() for e in range(self._num_generators)]))
 
@@ -1407,7 +1408,7 @@ class pAutomorphicForms(Module):
                     # self._source should has a embed method that, given stabilizers,
                     # returns 2x2 matrices that can act on the distributions.
                     newFi  +=  x.r_act_by(m.adjoint()*self._source.embed(v[0],prec = self._prec)*m)
-                newF.apend((1/s)*newFi)
+                newF.append((1/s)*newFi)
             else:
                 newF.append(x)
         return newF

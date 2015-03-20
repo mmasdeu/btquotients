@@ -2409,6 +2409,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
             self._Iotainv = self._Mat_44([self._Iotainv_lift[ii, jj] % self._pN for ii in range(4) for jj in range(4)])
             return self._Iota
 
+
     def embed_quaternion(self, g, exact=False, prec=None):
         r"""
         Embeds the quaternion element ``g`` into a matrix algebra.
@@ -2452,6 +2453,8 @@ class BTQuotient(SageObject, UniqueRepresentation):
         else:
             A = self.get_embedding_matrix(prec=prec) * g
             return Matrix(self._R, 2, 2, A.list())
+
+    embed = embed_quaternion
 
     def get_embedding(self, prec=None):
         r"""
