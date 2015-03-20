@@ -298,7 +298,7 @@ class DoubleCosetReduction(SageObject):
                 prec = ZZ(embedding)
             except TypeError:
                 # The user knows what she is doing, so let it go
-                return embedding(self.gamma, scale=scale)
+                return embedding(self.gamma)
         if prec > self._igamma_prec:
             self._igamma_prec = prec
             self._cached_igamma = Y.embed_quaternion(self.gamma, exact=False,
@@ -3740,6 +3740,10 @@ class BTQuotient(SageObject, UniqueRepresentation):
             sage: f = X.harmonic_cocycle_from_elliptic_curve(E,10)
             sage: T29 = f.parent().hecke_operator(29)
             sage: T29(f) == E.ap(29) * f
+            sage: E = EllipticCurve('51a1')
+            sage: f = X.harmonic_cocycle_from_elliptic_curve(E,20)
+            sage: T31=f.parent().hecke_operator(31)
+            sage: T31(f)==E.ap(31)*
             True
         """
         from pautomorphicform import HarmonicCocycles
@@ -3764,7 +3768,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
             else:
                 Q = F(q).factor()[0][0]
                 Eap = ZZ(Q.norm() + 1 - E.reduction(Q).count_points())
-            K1 = (M.hecke_matrix(q) - Eap).right_kernel()
+            K1 = (M.hecke_matrix(q).transpose() - Eap).right_kernel()
             K = K.intersection(K1)
         col = [ZZ(o) for o in K.matrix().list()]
         return sum([a * M.gen(i) for i, a in enumerate(col) if a != 0], M(0))

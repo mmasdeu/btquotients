@@ -1,5 +1,3 @@
-# from sage.modular.btquotients.btquotient import *
-# from sage.modular.btquotients.ocmodule import *
 #########################################################################
 #       Copyright (C) 2011 Cameron Franc and Marc Masdeu
 #
@@ -25,6 +23,8 @@ from sage.rings.laurent_series_ring import LaurentSeriesRing
 from sage.modular.hecke.all import (AmbientHeckeModule, HeckeSubmodule, HeckeModuleElement)
 import sage.rings.arith as arith
 import sage.modular.hecke.hecke_operator
+from btquotient import *
+from ocmodule import *
 
 
 class HarmonicCocycleElement(HeckeModuleElement):
@@ -72,7 +72,7 @@ class HarmonicCocycleElement(HeckeModuleElement):
         self._R  =  _parent._R
         try:
             v = [self._R(x) for x in list(vec)]
-        except AttributeError:
+        except TypeError:
             v = [self._R(vec) for ii in range(_parent.dimension())]
         self._wt = _parent._k
         self._nE = len(_parent._E)
@@ -539,7 +539,7 @@ class HarmonicCocycles(AmbientHeckeModule):
         if x1.nrows() !=  self.rank():
             raise RuntimeError, 'The number of computed basis elements (%s) does not agree with the expectation (%s). Consider increasing precision!'%(x1.nrows(),self.rank())
 
-        K = [c for c in x1.rows()]
+        K = [list(c) for c in x1.rows()]
 
         if not self._R.is_exact():
             for ii in range(len(K)):

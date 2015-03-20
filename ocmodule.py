@@ -11,6 +11,7 @@ from sage.modules.module import Module
 from sage.matrix.constructor import Matrix
 from sage.matrix.matrix_space import MatrixSpace
 from copy import copy
+from sage.rings.all import Integer
 from sage.rings.finite_rings.integer_mod_ring import Zmod
 from sage.rings.power_series_ring import PowerSeriesRing
 from sage.structure.unique_representation import UniqueRepresentation
