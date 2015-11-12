@@ -2808,7 +2808,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
             ]
         """
         OM = self.get_eichler_order_quadmatrix()
-        v = pari('qfminim(%s,2,0, flag = 0)' % (OM._pari_()))
+        v = pari('qfminim(%s,2,0, flag = 2)' % (OM._pari_()))
         n_units = Integer(v[0].python() / 2)
         v = pari('qfminim(%s,2,%s, flag = 2)' % ((OM._pari_()), n_units))
         O_units = []
@@ -3277,7 +3277,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
         n_units = len(self.get_units_of_order())
         ## Using PARI to get the shortest vector in the lattice (via LLL)
         ## We used to pass qfminim flag = 2
-        mat = pari('qfminim(%s,0,%s)' % (A._pari_(), 2 * n_units))[2].python().transpose()
+        mat = pari('qfminim(%s,,%s,flag = 2)' % (A._pari_(), 2 * n_units))[2].python().transpose()
         n_vecs = mat.nrows()
         stabs = []
         for jj in range(n_vecs):
@@ -3295,7 +3295,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
         else:
             return stabs
 
-    def _nebentype_check(self, vec, twom, E, A, flag=0):
+    def _nebentype_check(self, vec, twom, E, A, flag = 2):
         """
         Checks if a quaternion maps into a subgroup of matrices
         determined by a nontrivial Dirichlet character (associated to
@@ -3343,7 +3343,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
         if not self._use_magma or len(self._extra_level) == 0:
             return E * vec, True
         m = ZZ(twom / 2)
-        mat = pari('qfminim(%s,0,%s,flag = %s)' % (A._pari_(), 1000, flag))[2].python().transpose()
+        mat = pari('qfminim(%s,,%s,flag = %s)' % (A._pari_(), 1000, flag))[2].python().transpose()
         n_vecs = mat.nrows()
         p = self._p
         pinv = Zmod(self._character.modulus())(p) ** -1
@@ -3427,7 +3427,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
                 return None
         E, A = self._find_lattice(v1, v2, as_edges, twom)
         ## Using PARI to get the shortest vector in the lattice (via LLL)
-        vec = pari('qfminim(%s,0,1,flag = 0)' % (A._pari_()))[2].python()
+        vec = pari('qfminim(%s,,1,flag = 2)' % (A._pari_()))[2].python()
 
         vect = vec.transpose()
         nrd = Integer((vect * A * vec)[0, 0] / 2)

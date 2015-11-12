@@ -692,9 +692,9 @@ class HarmonicCocycles(AmbientHeckeModule):
             res = (A.solve_right(B)).transpose()
             res.set_immutable()
         except ValueError:
-            save([A,B],'error.log.sobj')
-            print A.nrows(),A.ncols()
-            print B.nrows(),B.ncols()
+            # save([A,B],'error.log.sobj')
+            # print A.nrows(),A.ncols()
+            # print B.nrows(),B.ncols()
             raise ValueError,'The hecke operator action is wrong.'
         return res
 
