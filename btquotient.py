@@ -1413,10 +1413,12 @@ class BTQuotient(SageObject, UniqueRepresentation):
             extra_level = character.conductor()
             if not extra_level.is_squarefree():
                 raise ValueError("character must be of squarefree conductor")
+            self._trivial_character = False
         else:
             G = DirichletGroup(lev * Nplus)
             character = G([1] * G.ngens())
             extra_level = 1
+            self._trivial_character = True
 
         if not p.is_prime():
             raise ValueError("p must be a prime")
@@ -1885,6 +1887,15 @@ class BTQuotient(SageObject, UniqueRepresentation):
             sage: X = BTQuotient(2,5) # optional - magma
             sage: print [X.dimension_harmonic_cocycles(k) for k in range(2,40,2)] # optional - magma
             [0, 1, 3, 1, 3, 5, 3, 5, 7, 5, 7, 9, 7, 9, 11, 9, 11, 13, 11]
+
+            sage: X = BTQuotient(7, 2 * 3 * 5)
+            sage: print X.dimension_harmonic_cocycles(4)
+            12
+            sage: X = BTQuotient(7, 2 * 3 * 5 * 11 * 13)
+            sage: print X.dimension_harmonic_cocycles(2)
+            481
+            sage: print X.dimension_harmonic_cocycles(2)
+            1440
         """
         k = ZZ(k)
         if lev is None:
@@ -1897,9 +1908,13 @@ class BTQuotient(SageObject, UniqueRepresentation):
             Nplus = ZZ(Nplus)
 
         if character is None:
-            character = self._character
-        kernel = filter(lambda r: gcd(r, lev * Nplus) == 1 and character(r) == 1,
-                        range(lev * Nplus))
+            if not self._trivial_character:
+                character = self._character
+                kernel = filter(lambda r: gcd(r, lev * Nplus) == 1 and character(r) == 1,
+                                range(lev * Nplus))
+            else:
+                character = None
+                kernel = None
 
         if k == 0:
             return 0
@@ -1911,10 +1926,21 @@ class BTQuotient(SageObject, UniqueRepresentation):
         if any([l[1] != 1 for l in f]):
             raise NotImplementedError('The level should be squarefree for '
                                       'this function to work... Sorry!')
+        GH = lambda N,ker: Gamma0(N) if character is None else GammaH_class(N,ker)
 
         divs = lev.divisors()
 
-        return GammaH_class(lev * Nplus, kernel).dimension_cusp_forms(k=k) - sum([len(ZZ(lev / d).divisors()) * self.dimension_harmonic_cocycles(k, d, Nplus, character) for d in divs[:-1]])
+        def mumu(N):
+            p = 1
+            for _,r in ZZ(N).factor():
+                if r > 2:
+                    return ZZ(0)
+                elif r == 1:
+                    p *= -2
+            return ZZ(p)
+
+        #return GammaH_class(lev * Nplus, kernel).dimension_cusp_forms(k=k) - sum([len(ZZ(lev / d).divisors()) * self.dimension_harmonic_cocycles(k, d, Nplus, character) for d in divs[:-1]]) # THIS WAS DEFINITELY WRONG
+        return sum([mumu(lev // d) * GH(d * Nplus, kernel).dimension_cusp_forms(k) for d in lev.divisors()])
 
     def Nplus(self):
         r"""
@@ -3650,7 +3676,7 @@ class BTQuotient(SageObject, UniqueRepresentation):
             v = V.popleft()
             E = self._BT.leaving_edges(v.rep)
 
-            # print 'V = %s, E = %s, G = %s (target = %s), lenV = %s' % (num_verts,num_edges,1+num_edges-num_verts,genus,len(V))
+            verbose('V = %s, E = %s, G = %s (target = %s), lenV = %s'%(num_verts,num_edges,1+num_edges-num_verts,genus,len(V)))
             for e in E:
                 edge_det = e.determinant()
                 edge_valuation = edge_det.valuation(p)
